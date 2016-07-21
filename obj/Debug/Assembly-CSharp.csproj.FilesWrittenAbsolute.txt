@@ -1,0 +1,17 @@
+/Users/Huner/gamedev/Arena/Temp/bin/Debug/Assembly-CSharp.dll.mdb
+/Users/Huner/gamedev/Arena/Temp/bin/Debug/Assembly-CSharp.dll
+/Users/Huner/gamedev/Arena/obj/Debug/Assembly-CSharp.dll
+/Users/Huner/gamedev/Arena/obj/Debug/Assembly-CSharp.dll.mdb
+/Users/Huner/gamedev/Arena/Temp/bin/Debug/UnityEngine.dll
+/Users/Huner/gamedev/Arena/Temp/bin/Debug/UnityEditor.dll
+/Users/Huner/gamedev/Arena/Temp/bin/Debug/UnityEngine.Networking.dll
+/Users/Huner/gamedev/Arena/Temp/bin/Debug/UnityEngine.UI.dll
+/Users/Huner/gamedev/Arena/Temp/bin/Debug/Mono.Cecil.dll
+/Users/Huner/gamedev/Arena/Temp/bin/Debug/Unity.SerializationLogic.dll
+/Users/Huner/gamedev/Arena/Temp/bin/Debug/Unity.DataContract.dll
+/Users/Huner/gamedev/Arena/Temp/bin/Debug/ICSharpCode.NRefactory.dll
+/Users/Huner/gamedev/Arena/Temp/bin/Debug/Unity.UNetWeaver.dll
+/Users/Huner/gamedev/Arena/Temp/bin/Debug/Unity.UNetWeaver.dll.mdb
+/Users/Huner/gamedev/Arena/Temp/bin/Debug/Unity.CecilTools.dll
+/Users/Huner/gamedev/Arena/Temp/bin/Debug/Mono.Cecil.Pdb.dll
+/Users/Huner/gamedev/Arena/Temp/bin/Debug/Mono.Cecil.Mdb.dll
