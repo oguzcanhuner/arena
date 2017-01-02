@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BoardEntity : MonoBehaviour {
+public class Unit : MonoBehaviour {
 	private float TILE_OFFSET = 0.5f;
 
 	public Vector3 Centre(){

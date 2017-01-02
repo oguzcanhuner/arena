@@ -49,14 +49,22 @@ public class BoardManager : MonoBehaviour {
 		GameObject parent = GameObject.Find ("Pieces");
 
 
-		Transform created1 = (Transform)Instantiate (piecePrefab, new Vector3 (0, 1, 0), Quaternion.identity);
+		Transform created1 = (Transform)Instantiate (piecePrefab, new Vector3 (1, 1, 0), Quaternion.identity);
 		created1.SetParent (parent.GetComponent<Transform>());
 
-		Transform created2 = (Transform)Instantiate (piecePrefab, new Vector3 (2, 1, 0), Quaternion.identity);
+		Transform created2 = (Transform)Instantiate (piecePrefab, new Vector3 (3, 1, 0), Quaternion.identity);
+		created2.SetParent (parent.GetComponent<Transform>());
+
+		Transform created3 = (Transform)Instantiate (piecePrefab, new Vector3 (5, 1, 0), Quaternion.identity);
+		created2.SetParent (parent.GetComponent<Transform>());
+
+		Transform created4 = (Transform)Instantiate (piecePrefab, new Vector3 (7, 1, 0), Quaternion.identity);
 		created2.SetParent (parent.GetComponent<Transform>());
 
 		Piece.AddPiece (created1.GetComponent<Piece> ());
 		Piece.AddPiece (created2.GetComponent<Piece> ());
+		Piece.AddPiece (created3.GetComponent<Piece> ());
+		Piece.AddPiece (created4.GetComponent<Piece> ());
 
 
 	}

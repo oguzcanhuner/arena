@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Tile : BoardEntity {
+public class Tile : Unit {
 	private static Dictionary<Vector3, Tile> tiles = new Dictionary<Vector3, Tile> ();
 
 	public static Tile GetTile(Vector3 centre){

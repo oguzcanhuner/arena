@@ -2,9 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Piece : BoardEntity {
+public class Piece : Unit {
 	private static Dictionary<Vector3, Piece> pieces = new Dictionary<Vector3, Piece> ();
 	public float movementSpeed;
+	public int movementRadius;
 
 	public static Piece GetPiece(Vector3 centre){
 		centre = new Vector3 (centre.x, 0, centre.z);
@@ -40,12 +41,9 @@ public class Piece : BoardEntity {
 	}
 
 	private IEnumerator SmoothMove(Vector3 destination){
-		Vector3 startPosition = this.transform.position;
-
 		while (transform.position != destination) {
 			Vector3 move = Vector3.MoveTowards (transform.position, destination, movementSpeed * Time.deltaTime);
 			transform.position = move;
-			Debug.Log (move);
 			yield return null;
 		}
 	}
@@ -53,9 +51,8 @@ public class Piece : BoardEntity {
 	public List<Vector3> possibleMoves(){
 		List<Vector3> list = new List<Vector3> ();
 
-		int radius = 2;
-		for (int x=-radius; x <= radius; x++) {
-			for (int z = -radius; z <= radius; z++) {
+		for (int x=-movementRadius; x <= movementRadius; x++) {
+			for (int z = -movementRadius; z <= movementRadius; z++) {
 				list.Add (new Vector3 (Centre ().x + x, 0, Centre ().z + z));
 			}
 		}

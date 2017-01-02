@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Highlight : BoardEntity {
+public class Highlight : Unit {
 	
 	private static Dictionary<Vector3, Highlight> highlights = new Dictionary<Vector3, Highlight> ();
 	private bool selected;
@@ -59,7 +59,7 @@ public class Highlight : BoardEntity {
 		selected = false;
 	}
 
-	private static Vector3 normalize(float x, float z){
+	new private static Vector3 normalize(float x, float z){
 		x = Mathf.Floor (x) + 0.5f;
 		z = Mathf.Floor (z) + 0.5f;
 
