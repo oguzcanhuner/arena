@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Highlight : Unit {
+public class Highlight : BoardEntity {
 	
 	private static Dictionary<Vector3, Highlight> highlights = new Dictionary<Vector3, Highlight> ();
 	private bool selected;
@@ -12,10 +12,7 @@ public class Highlight : Unit {
 	}
 
 	public static Highlight GetHighlight(float x, float z){
-		x = Mathf.Floor (x) + 0.5f;
-		z = Mathf.Floor (z) + 0.5f;
-
-		return highlights [new Vector3 (x, 0, z)];
+		return highlights [normalize (x, z)];
 	}
 
 	public static bool Exists(float x, float z){

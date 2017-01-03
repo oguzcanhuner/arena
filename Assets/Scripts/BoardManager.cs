@@ -21,13 +21,18 @@ public class BoardManager : MonoBehaviour {
 
 		for (int z = 0; z < boardSize; z++) {
 			for (int x = 0; x < boardSize; x++) {
-				
-				Transform created = (Transform)Instantiate (tilePrefab, new Vector3 (x, 0, z), Quaternion.identity);
-				created.SetParent (parent.GetComponent<Transform>());
 
-				Tile.AddTile (created.GetComponent<Tile> ());
+				GameObject tileContainer = new GameObject ();
+				tileContainer.transform.position = new Vector3 (x, 0, z);
+				Transform tile = (Transform)Instantiate (tilePrefab, tileContainer.transform.position, Quaternion.identity);
+
+				tile.SetParent (tileContainer.transform);
+				tileContainer.transform.SetParent (parent.transform);
+
+				Tile.AddTile (tile.GetComponent<Tile> ());
 			}
 		}
+
 	}
 
 	private void generateHighlights(){
@@ -36,11 +41,15 @@ public class BoardManager : MonoBehaviour {
 		for (int z = 0; z < boardSize; z++) {
 			for (int x = 0; x < boardSize; x++) {
 
-				Transform created = (Transform)Instantiate (highlightPrefab, new Vector3 (x, 0.1f, z), Quaternion.identity);
-	
-				created.SetParent (parent.GetComponent<Transform>());
+				GameObject highlightContainer = new GameObject ();
+				Vector3 position = new Vector3 (x, 0, z);
+				highlightContainer.transform.position = position;
+				Transform highlight = (Transform)Instantiate (highlightPrefab, new Vector3(position.x, 0.1f, position.z), Quaternion.identity);
 
-				Highlight.AddHighlight (created.GetComponent<Highlight> ());
+				highlight.SetParent (highlightContainer.transform);
+				highlightContainer.transform.SetParent (parent.transform);
+
+				Highlight.AddHighlight (highlight.GetComponent<Highlight> ());
 			}
 		}
 	}
@@ -48,24 +57,29 @@ public class BoardManager : MonoBehaviour {
 	private void generatePieces(){
 		GameObject parent = GameObject.Find ("Pieces");
 
+		// create an empty parent class for each piece
+		// attach that parent to the Pieces object
 
-		Transform created1 = (Transform)Instantiate (piecePrefab, new Vector3 (1, 1, 0), Quaternion.identity);
-		created1.SetParent (parent.GetComponent<Transform>());
+		List<Vector3> positions = new List<Vector3>();
 
-		Transform created2 = (Transform)Instantiate (piecePrefab, new Vector3 (3, 1, 0), Quaternion.identity);
-		created2.SetParent (parent.GetComponent<Transform>());
+		positions.Add (new Vector3 (1, 1, 0));
+		positions.Add (new Vector3 (3, 1, 0));
+		positions.Add (new Vector3 (5, 1, 0));
+		positions.Add (new Vector3 (7, 1, 0));
 
-		Transform created3 = (Transform)Instantiate (piecePrefab, new Vector3 (5, 1, 0), Quaternion.identity);
-		created2.SetParent (parent.GetComponent<Transform>());
+		foreach (Vector3 position in positions) {
+			GameObject pieceContainer = new GameObject ();
+			pieceContainer.transform.position = new Vector3(position.x, 0, position.z);
 
-		Transform created4 = (Transform)Instantiate (piecePrefab, new Vector3 (7, 1, 0), Quaternion.identity);
-		created2.SetParent (parent.GetComponent<Transform>());
+			Transform piece = (Transform)Instantiate (piecePrefab, pieceContainer.transform.position, Quaternion.identity);
 
-		Piece.AddPiece (created1.GetComponent<Piece> ());
-		Piece.AddPiece (created2.GetComponent<Piece> ());
-		Piece.AddPiece (created3.GetComponent<Piece> ());
-		Piece.AddPiece (created4.GetComponent<Piece> ());
+			piece.SetParent (pieceContainer.transform);
+			pieceContainer.transform.SetParent (parent.transform);
+			piece.position = new Vector3 (0, position.y, 0);
 
+
+			Piece.AddPiece (piece.GetComponent<Piece> ());
+		}
 
 	}
 

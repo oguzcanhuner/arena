@@ -38,12 +38,13 @@ public class GameManager : MonoBehaviour {
 	private void waitingToMove(){
 		
 		Vector3 pos = pressDown (Input.mousePosition);
-
+		Debug.Log (pos);
 		if (Piece.Exists (pos.x, pos.z)) {
 			selectPieceToMove (pos);
 			stateMachine.selectUnitToMove ();
 			GamePhase.text = "Select a highlighted square to move to";
 		}// else do nothing
+
 	}
 
 	private void selectMoveTarget(){
@@ -140,7 +141,11 @@ public class GameManager : MonoBehaviour {
 	private void attack(Vector3 pos){
 		if (Piece.Exists (pos.x, pos.z)) {
 			Piece target = Piece.GetPiece (pos.x, pos.z);
-			target.takeDamage (boardManager.selectedPiece.attackValue);
+			Piece selected = boardManager.selectedPiece;
+			target.takeDamage (selected.attackValue);
+//			Animator anim = selected.GetComponent<Animator> ();
+//			anim.Play ("Attack");
+
 		}
 		boardManager.selectedPiece = null;
 	}

@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Piece : Unit {
+public class Piece : BoardEntity {
 	private static Dictionary<Vector3, Piece> pieces = new Dictionary<Vector3, Piece> ();
 	public float movementSpeed;
 	public int movementRadius;
@@ -10,6 +10,11 @@ public class Piece : Unit {
 
 	public int hitpoints;
 	public int attackValue;
+	Transform parent;
+
+	void Start(){
+		parent = this.transform.parent;
+	}
 
 	public static Piece GetPiece(Vector3 centre){
 		centre = new Vector3 (centre.x, 0, centre.z);
@@ -17,7 +22,8 @@ public class Piece : Unit {
 	}
 
 	public static Piece GetPiece(float x, float z){
-		return pieces [normalize(x,z)];
+		
+		return pieces [normalize (x, z)];
 	}
 
 	public static void AddPiece(Piece piece){
@@ -36,18 +42,24 @@ public class Piece : Unit {
 	}
 
 	public void MoveTo(float x, float z){
-		StartCoroutine( SmoothMove (new Vector3 (x, transform.position.y, z)));
+//		Animator anim = this.GetComponent<Animator> ();
+//		anim.SetTrigger ("move");
+		Debug.Log("Piece being moved:");
+		Debug.Log (this.Centre ());
+
 		Piece.pieces.Remove (this.Centre());
-		Piece.pieces.Add (normalize (x, z), this);
-
-
+		Piece.pieces.Add(normalize(x, z), this);
+		StartCoroutine( SmoothMove (new Vector3 (x, 0, z)));
 
 	}
 
 	private IEnumerator SmoothMove(Vector3 destination){
-		while (transform.position != destination) {
-			Vector3 move = Vector3.MoveTowards (transform.position, destination, movementSpeed * Time.deltaTime);
-			transform.position = move;
+		Debug.Log("Starting moving");
+		while (parent.position != destination) {
+			Vector3 move = Vector3.MoveTowards (parent.position, destination, movementSpeed * Time.deltaTime);
+			parent.position = move;
+
+			Debug.Log (parent.position);
 			yield return null;
 		}
 	}
@@ -86,4 +98,9 @@ public class Piece : Unit {
 		}
 	}
 
+	private void printPieces(){
+		foreach (KeyValuePair<Vector3, Piece> piece in Piece.pieces) {
+			Debug.Log (piece.Value.Centre());
+		}
+	}
 }
