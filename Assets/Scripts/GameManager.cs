@@ -38,7 +38,6 @@ public class GameManager : MonoBehaviour {
 	private void waitingToMove(){
 		
 		Vector3 pos = pressDown (Input.mousePosition);
-		Debug.Log (pos);
 		if (Piece.Exists (pos.x, pos.z)) {
 			selectPieceToMove (pos);
 			stateMachine.selectUnitToMove ();
@@ -139,12 +138,13 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void attack(Vector3 pos){
+		Animator anim = boardManager.selectedPiece.GetComponent<Animator> ();
+		anim.SetTrigger ("Attack");
+
 		if (Piece.Exists (pos.x, pos.z)) {
 			Piece target = Piece.GetPiece (pos.x, pos.z);
-			Piece selected = boardManager.selectedPiece;
-			target.takeDamage (selected.attackValue);
-//			Animator anim = selected.GetComponent<Animator> ();
-//			anim.Play ("Attack");
+			target.takeDamage (boardManager.selectedPiece.attackValue);
+
 
 		}
 		boardManager.selectedPiece = null;

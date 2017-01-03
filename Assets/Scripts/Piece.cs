@@ -12,8 +12,11 @@ public class Piece : BoardEntity {
 	public int attackValue;
 	Transform parent;
 
+	Animator anim;
+
 	void Start(){
 		parent = this.transform.parent;
+		anim = GetComponent<Animator> ();
 	}
 
 	public static Piece GetPiece(Vector3 centre){
@@ -34,7 +37,7 @@ public class Piece : BoardEntity {
 		return pieces.ContainsKey (normalize(x,z));
 	}
 
-	private static Vector3 normalize(float x, float z){
+	new private static Vector3 normalize(float x, float z){
 		x = Mathf.Floor (x) + 0.5f;
 		z = Mathf.Floor (z) + 0.5f;
 
@@ -42,24 +45,26 @@ public class Piece : BoardEntity {
 	}
 
 	public void MoveTo(float x, float z){
-//		Animator anim = this.GetComponent<Animator> ();
-//		anim.SetTrigger ("move");
-		Debug.Log("Piece being moved:");
-		Debug.Log (this.Centre ());
-
+		
 		Piece.pieces.Remove (this.Centre());
 		Piece.pieces.Add(normalize(x, z), this);
+		anim.SetBool("moving", true);
 		StartCoroutine( SmoothMove (new Vector3 (x, 0, z)));
 
 	}
 
 	private IEnumerator SmoothMove(Vector3 destination){
-		Debug.Log("Starting moving");
+		
+
 		while (parent.position != destination) {
+			
 			Vector3 move = Vector3.MoveTowards (parent.position, destination, movementSpeed * Time.deltaTime);
 			parent.position = move;
 
-			Debug.Log (parent.position);
+			if (parent.position == destination){
+				anim.SetBool ("moving", false);
+			}
+
 			yield return null;
 		}
 	}
