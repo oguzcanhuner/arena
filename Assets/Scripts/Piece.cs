@@ -6,6 +6,10 @@ public class Piece : Unit {
 	private static Dictionary<Vector3, Piece> pieces = new Dictionary<Vector3, Piece> ();
 	public float movementSpeed;
 	public int movementRadius;
+	public int attackRadius;
+
+	public int hitpoints;
+	public int attackValue;
 
 	public static Piece GetPiece(Vector3 centre){
 		centre = new Vector3 (centre.x, 0, centre.z);
@@ -58,6 +62,28 @@ public class Piece : Unit {
 		}
 
 		return list;
+	}
+
+	public List<Vector3> possibleAttacks(){
+		List<Vector3> list = new List<Vector3> ();
+
+		for (int x=-attackRadius; x <= attackRadius; x++) {
+			for (int z = -attackRadius; z <= attackRadius; z++) {
+				list.Add (new Vector3 (Centre ().x + x, 0, Centre ().z + z));
+			}
+		}
+
+		return list;
+	}
+
+	public void takeDamage(int amount){
+		this.hitpoints -= amount;
+		Debug.Log ("Take damage: " + amount.ToString ());
+		Debug.Log ("New health: " + this.hitpoints.ToString ());
+		if (this.hitpoints <= 0) {
+			pieces.Remove (this.Centre());
+			Destroy (gameObject);
+		}
 	}
 
 }

@@ -16,6 +16,10 @@ public class StateMachine : MonoBehaviour
 		stateTransitions[ new StateTransition("selecting_move_target", "select_unit_to_move")] = "selecting_move_target";
 		stateTransitions[ new StateTransition("selecting_move_target", "move_unit_to_target")] = "waiting_to_attack";
 		stateTransitions[ new StateTransition("selecting_move_target", "cancel_movement")] = "waiting_to_move";
+		stateTransitions[ new StateTransition("waiting_to_attack", "select_unit_to_attack")] = "selecting_attack_target";
+		stateTransitions[ new StateTransition("selecting_attack_target", "select_unit_to_attack")] = "selecting_attack_target";
+		stateTransitions[ new StateTransition("selecting_attack_target", "attack")] = "waiting_to_move";
+
 
 		// initial state
 		currentState = "waiting_to_move";
@@ -27,6 +31,13 @@ public class StateMachine : MonoBehaviour
 	public void moveUnitToTarget(){
 		performEvent("move_unit_to_target");
 	}
+	public void selectUnitToAttack(){
+		performEvent("select_unit_to_attack");
+	}
+	public void attack(){
+		performEvent("attack");
+	}
+
 
 
 	private void performEvent(string e){
@@ -59,9 +70,4 @@ public class StateMachine : MonoBehaviour
 			return other != null && this.initialState == other.initialState && this.action == other.action;
 		}
 	}
-
-
-	// Creste a new class which holds a transition
-	// override the function which compares two dictionary keys, and implement it on the state transition class
-	
 }
