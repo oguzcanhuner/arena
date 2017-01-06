@@ -7,8 +7,11 @@ public class BoardManager : MonoBehaviour {
 	public Transform tilePrefab;
 	public Transform highlightPrefab;
 	public Transform piecePrefab;
+	public TextMesh StatusTextPrefab;
 
 	public Piece selectedPiece;
+
+
 
 	void Start(){
 		generateBoard ();
@@ -60,27 +63,58 @@ public class BoardManager : MonoBehaviour {
 		// create an empty parent class for each piece
 		// attach that parent to the Pieces object
 
-		List<Vector3> positions = new List<Vector3>();
+		List<PieceData> pieces = new List<PieceData>();
 
-		positions.Add (new Vector3 (1, 1, 0));
-		positions.Add (new Vector3 (3, 1, 0));
-		positions.Add (new Vector3 (5, 1, 0));
-		positions.Add (new Vector3 (7, 1, 0));
+		// Player 1
+		pieces.Add (new PieceData(new Vector3 (1, 0.15f, 0), 1));
+		pieces.Add (new PieceData(new Vector3 (3, 0.15f, 0), 1));
+		pieces.Add (new PieceData(new Vector3 (5, 0.15f, 0), 1));
+		pieces.Add (new PieceData(new Vector3 (7, 0.15f, 0), 1));
 
-		foreach (Vector3 position in positions) {
+		// Player 2
+		pieces.Add (new PieceData(new Vector3 (1, 0.15f, boardSize - 1), 2));
+		pieces.Add (new PieceData(new Vector3 (3, 0.15f, boardSize - 1), 2));
+		pieces.Add (new PieceData(new Vector3 (5, 0.15f, boardSize - 1), 2));
+		pieces.Add (new PieceData(new Vector3 (7, 0.15f, boardSize - 1), 2));
+
+
+		// NOTE - create an empty status text above each piece
+
+		foreach (PieceData pieceData in pieces) {
 			GameObject pieceContainer = new GameObject ();
-			pieceContainer.transform.position = new Vector3(position.x, 0, position.z);
+			pieceContainer.transform.position = new Vector3(pieceData.position.x, 0, pieceData.position.z);
 
-			Transform piece = (Transform)Instantiate (piecePrefab, pieceContainer.transform.position, Quaternion.identity);
+			Transform piece;
+			if (pieceData.team == 1) {
+				piece = (Transform)Instantiate (piecePrefab, pieceData.position, Quaternion.identity);
+			} else {
+				piece = (Transform)Instantiate (piecePrefab, pieceData.position, Quaternion.Euler(new Vector3(0, 180, 0)));
+			}
+
+			// rotate 180 degrees
 
 			piece.SetParent (pieceContainer.transform);
 			pieceContainer.transform.SetParent (parent.transform);
-			piece.position = new Vector3 (0, position.y, 0);
+
+			TextMesh text = (TextMesh)Instantiate (StatusTextPrefab, new Vector3(0, 1.5f), Quaternion.Euler(new Vector3(0, 90)));
+			text.transform.SetParent (pieceContainer.transform);
+			piece.GetComponent<Piece> ().StatusText = text;
+			piece.GetComponent<Piece> ().team = pieceData.team;
 
 
 			Piece.AddPiece (piece.GetComponent<Piece> ());
 		}
 
+	}
+
+	private class PieceData {
+		public Vector3 position;
+		public int team;
+
+		public PieceData(Vector3 position, int team){
+			this.position = position;
+			this.team = team;
+		}
 	}
 
 }

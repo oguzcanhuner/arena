@@ -10,6 +10,9 @@ public class Piece : BoardEntity {
 
 	public int hitpoints;
 	public int attackValue;
+	public TextMesh StatusText;
+	public int team;
+
 	Transform parent;
 
 	Animator anim;
@@ -45,10 +48,13 @@ public class Piece : BoardEntity {
 	}
 
 	public void MoveTo(float x, float z){
+
+		Vector3 destination = new Vector3 (x, 0, z);
 		
 		Piece.pieces.Remove (this.Centre());
 		Piece.pieces.Add(normalize(x, z), this);
 		anim.SetBool("moving", true);
+		this.transform.LookAt (destination);
 		StartCoroutine( SmoothMove (new Vector3 (x, 0, z)));
 
 	}
@@ -91,6 +97,20 @@ public class Piece : BoardEntity {
 		}
 
 		return list;
+	}
+
+	public void attack(Vector3 target){
+		transform.LookAt (target);
+		anim.SetTrigger ("Attack");
+
+		if (Piece.Exists (target.x, target.z)) {
+			Piece targetPiece = Piece.GetPiece (target.x, target.z);
+			targetPiece.takeDamage (this.attackValue);
+			targetPiece.StatusText.text = this.attackValue.ToString();
+			Animator textAnimator = targetPiece.StatusText.GetComponent<Animator> ();
+			textAnimator.SetTrigger ("float text");
+
+		}
 	}
 
 	public void takeDamage(int amount){

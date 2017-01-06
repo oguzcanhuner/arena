@@ -19,6 +19,9 @@ public class StateMachine : MonoBehaviour
 		stateTransitions[ new StateTransition("waiting_to_attack", "select_unit_to_attack")] = "selecting_attack_target";
 		stateTransitions[ new StateTransition("selecting_attack_target", "select_unit_to_attack")] = "selecting_attack_target";
 		stateTransitions[ new StateTransition("selecting_attack_target", "attack")] = "waiting_to_move";
+		stateTransitions[ new StateTransition("selecting_attack_target", "cancelAttack")] = "waiting_to_attack";
+		stateTransitions[ new StateTransition("waiting_to_attack", "skipPhase")] = "waiting_to_move";
+		stateTransitions[ new StateTransition("waiting_to_move", "skipPhase")] = "waiting_to_attack";
 
 
 		// initial state
@@ -36,6 +39,13 @@ public class StateMachine : MonoBehaviour
 	}
 	public void attack(){
 		performEvent("attack");
+	}
+	public void cancelAttack(){
+		performEvent("cancelAttack");
+	}
+
+	public void skipPhase(){
+		performEvent("skipPhase");
 	}
 
 

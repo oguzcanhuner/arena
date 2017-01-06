@@ -6,15 +6,20 @@ public class GameManager : MonoBehaviour {
 
 	private BoardManager boardManager;
 	private StateMachine stateMachine;
+	public Text PlayerTurn;
 	public Text GamePhase;
+	private int teamTurn;
+
 
 	void Start(){
 		boardManager = GameObject.Find ("Board").GetComponent<BoardManager> ();
 		stateMachine = GameObject.Find ("Board").GetComponent<StateMachine> ();
-		GamePhase.text = "Select a piece to move";
+		teamTurn = 1;
+		PlayerTurn.text = "PLAYER " + teamTurn.ToString();
 	}
 
 	void Update(){
+		Debug.Log (stateMachine.currentState);
 		if (Input.GetMouseButtonDown (0)) {
 			switch (stateMachine.currentState) {
 			case "waiting_to_move":
@@ -33,6 +38,13 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	public void skipPhase(){
+		if (stateMachine.currentState == "waiting_to_attack") {
+			switchTurn ();
+		}
+		stateMachine.skipPhase ();
+	}
+
 	// STATES
 
 	private void waitingToMove(){
@@ -41,7 +53,6 @@ public class GameManager : MonoBehaviour {
 		if (Piece.Exists (pos.x, pos.z)) {
 			selectPieceToMove (pos);
 			stateMachine.selectUnitToMove ();
-			GamePhase.text = "Select a highlighted square to move to";
 		}// else do nothing
 
 	}
@@ -55,11 +66,12 @@ public class GameManager : MonoBehaviour {
 		if (Piece.Exists (pos.x, pos.z)) {
 			selectPieceToMove (pos);
 			stateMachine.selectUnitToMove ();
-			GamePhase.text = "Select a piece to move";
 		} else {
-			movePiece (pos);
-			stateMachine.moveUnitToTarget ();
-			GamePhase.text = "Select a player to attack with";
+			if (movePiece (pos)) {
+				stateMachine.moveUnitToTarget ();
+				boardManager.selectedPiece = null;
+			}
+
 		}
 	}
 
@@ -70,7 +82,6 @@ public class GameManager : MonoBehaviour {
 		if (Piece.Exists (pos.x, pos.z)) {
 			selectPieceToAttack (pos);
 			stateMachine.selectUnitToAttack ();
-			GamePhase.text = "Select a highlighted space to a\tttack";
 		}// else do nothing
 	}
 
@@ -78,8 +89,14 @@ public class GameManager : MonoBehaviour {
 		Highlight.ClearHighlights ();
 		Vector3 pos = pressDown (Input.mousePosition);
 
-		attack (pos);
-		stateMachine.attack ();
+		if (attack (pos)) {
+			stateMachine.attack ();
+			switchTurn ();
+			boardManager.selectedPiece = null;
+		} else {
+			stateMachine.cancelAttack ();
+		}
+
 	}
 
 
@@ -101,7 +118,6 @@ public class GameManager : MonoBehaviour {
 		Piece selected = Piece.GetPiece (pos.x, pos.z);
 
 		boardManager.selectedPiece = selected;
-		Debug.Log ("selected and highlighting move options");
 
 		// Highlight all possible moves
 		foreach(Vector3 possibleMove in boardManager.selectedPiece.possibleMoves()){
@@ -118,7 +134,6 @@ public class GameManager : MonoBehaviour {
 		Piece selected = Piece.GetPiece (pos.x, pos.z);
 
 		boardManager.selectedPiece = selected;
-		Debug.Log ("selected and highlighting attack options");
 
 		// Highlight all possible moves
 		foreach(Vector3 possibleAttack in boardManager.selectedPiece.possibleAttacks()){
@@ -129,24 +144,39 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	private void movePiece(Vector3 pos){
+	private bool movePiece(Vector3 pos){
 		Vector3 pieceCentre = new Vector3 (pos.x + 0.5f, 0, pos.z + 0.5f);
 		if (boardManager.selectedPiece.possibleMoves ().Contains (pieceCentre)) {
 			boardManager.selectedPiece.MoveTo (pos.x, pos.z);
+			return true;
+
+		} else {
+			return false;
 		}
-		boardManager.selectedPiece = null;
+
 	}
 
-	private void attack(Vector3 pos){
-		Animator anim = boardManager.selectedPiece.GetComponent<Animator> ();
-		anim.SetTrigger ("Attack");
+	private bool attack(Vector3 target){
+		Vector3 pieceCentre = new Vector3 (target.x + 0.5f, 0, target.z + 0.5f);
 
-		if (Piece.Exists (pos.x, pos.z)) {
-			Piece target = Piece.GetPiece (pos.x, pos.z);
-			target.takeDamage (boardManager.selectedPiece.attackValue);
+		Piece selected = boardManager.selectedPiece;
 
-
+		if (selected.possibleAttacks ().Contains (pieceCentre)) {
+			selected.attack (target);
+			return true;
+		} else {
+			return false;
 		}
-		boardManager.selectedPiece = null;
+		
+	}
+
+	private void switchTurn(){
+		if (teamTurn == 1) {
+			teamTurn = 2;
+		} else {
+			teamTurn = 1;
+		}
+
+		PlayerTurn.text = "PLAYER " + teamTurn.ToString();
 	}
 }
